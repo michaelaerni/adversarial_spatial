@@ -5,24 +5,20 @@ from __future__ import division
 from __future__ import print_function
 
 import argparse
-from datetime import datetime
 import json
-import math
 import os
-import shutil
-import sys
+from datetime import datetime
 from timeit import default_timer as timer
 
 import numpy as np
 import tensorflow as tf
-import tensorflow.contrib.slim as slim
-from tqdm import trange
 
 import cifar10_input
-from eval import evaluate 
 import resnet
-from spatial_attack import SpatialAttack
 import utilities
+from eval import evaluate
+from spatial_attack import SpatialAttack
+
 
 def train(config):
     # seeding randomness
@@ -48,7 +44,7 @@ def train(config):
     # Setting up the data and the model
     data_path = config.data.data_path
     raw_cifar = cifar10_input.CIFAR10Data(data_path)
-    global_step = tf.contrib.framework.get_or_create_global_step()
+    global_step = tf.train.get_or_create_global_step()
     model = resnet.Model(config.model)
 
     # uncomment to get a list of trainable variables

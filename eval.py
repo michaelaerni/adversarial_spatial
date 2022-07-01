@@ -37,7 +37,7 @@ def evaluate(model, attack, sess, config, summary_writer=None):
         os.makedirs(model_dir)
 
     cifar = cifar10_input.CIFAR10Data(data_path)
-    global_step = tf.contrib.framework.get_or_create_global_step()
+    global_step = tf.train.get_or_create_global_step()
     # Iterate over the samples batch-by-batch
     num_batches = int(math.ceil(num_eval_examples / eval_batch_size))
     total_xent_nat = 0.
@@ -168,7 +168,7 @@ if __name__ == "__main__":
     model = resnet.Model(config.model)
     model_dir = config.model.output_dir
 
-    global_step = tf.contrib.framework.get_or_create_global_step()
+    global_step = tf.train.get_or_create_global_step()
     attack = SpatialAttack(model, config.attack)
 
     if args.loop:
