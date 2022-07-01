@@ -6,3 +6,4 @@ output
 job_parameters.json
 job_result.json
 .exrc
+datasets/

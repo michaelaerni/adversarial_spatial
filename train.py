@@ -43,7 +43,7 @@ def train(config):
 
     # Setting up the data and the model
     data_path = config.data.data_path
-    raw_cifar = cifar10_input.CIFAR10Data(data_path)
+    raw_cifar = cifar10_input.CIFAR10Data(data_path, train_noise=config.training.noise)
     global_step = tf.train.get_or_create_global_step()
     model = resnet.Model(config.model)
 

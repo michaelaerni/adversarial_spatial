@@ -37,7 +37,7 @@ class CIFAR10Data(object):
         arrays, and an array of their 10,000 true labels.
 
     """
-    def __init__(self, path):
+    def __init__(self, path, train_noise: float = 0.0):
         train_filenames = ['data_batch_{}'.format(ii + 1) for ii in range(5)]
         eval_filename = 'test_batch'
         metadata_filename = 'batches.meta'
@@ -49,6 +49,7 @@ class CIFAR10Data(object):
                                             os.path.join(path, fname))
             train_images[ii * 10000 : (ii+1) * 10000, ...] = cur_images
             train_labels[ii * 10000 : (ii+1) * 10000, ...] = cur_labels
+
         eval_images, eval_labels = self._load_datafile(
                                             os.path.join(path, eval_filename))
 
@@ -61,6 +62,17 @@ class CIFAR10Data(object):
               self.label_names = data_dict[b'label_names']
         for ii in range(len(self.label_names)):
             self.label_names[ii] = self.label_names[ii].decode('utf-8')
+
+        # Apply label noise to training data
+        num_train_noise_samples = int(train_noise * train_labels.shape[0])
+        if num_train_noise_samples > 0:
+            noise_indices = np.random.permutation(train_labels.shape[0])[:num_train_noise_samples]
+            noise_classes_raw = np.random.randint(0, 10 - 1, size=(noise_indices.shape[0],))
+            original_classes = train_labels[noise_indices]
+            noise_classes = np.where(
+                noise_classes_raw < original_classes, noise_classes_raw, noise_classes_raw + 1
+            )
+            train_labels[noise_indices] = noise_classes
 
         self.train_data = Dataset(train_images, train_labels)
         self.eval_data = Dataset(eval_images, eval_labels)

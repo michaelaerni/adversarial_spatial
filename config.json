@@ -19,6 +19,7 @@
       "momentum": 0.9,
       "weight_decay": 0.0002,
       "eval_during_training": true,
+      "noise": 0.0,
       "adversarial_training": false,
       "data_augmentation": true
   },
